@@ -903,20 +903,20 @@ osg::StateSet* EffectCompositor::createMaterialFromXML( osgDB::XmlNode* xmlNode,
             if ( xmlChild->children.size()>0 )
             {
                 if ( varname.empty() ) varname = xmlChild->properties["name"];
-                stateset->addUniform( new osg::Uniform(varname.c_str(), unit) );
+                material->addUniform( new osg::Uniform(varname.c_str(), unit) );
                 
                 osg::Texture* texture = createTextureFromXML( xmlChild, false );
-                stateset->setTextureAttributeAndModes( unit, texture, modeValue );
+                material->setTextureAttributeAndModes( unit, texture, modeValue );
                 if ( childName=="input_buffer" )
                     OSG_NOTICE << "EffectCompositor: <material> " << name << " is using a local buffer which cannot be attached by others" << std::endl;
             }
             else
             {
                 if ( varname.empty() ) varname = xmlChild->getTrimmedContents();
-                stateset->addUniform( new osg::Uniform(varname.c_str(), unit) );
+                material->addUniform( new osg::Uniform(varname.c_str(), unit) );
                 
                 osg::Texture* texture = getTexture( xmlChild->getTrimmedContents() );
-                if ( texture ) stateset->setTextureAttributeAndModes( unit, texture, modeValue );
+                if ( texture ) material->setTextureAttributeAndModes( unit, texture, modeValue );
                 else OSG_NOTICE << "EffectCompositor: <material> can't find global texture object " << xmlChild->getTrimmedContents() << std::endl;
             }
         }
@@ -925,16 +925,25 @@ osg::StateSet* EffectCompositor::createMaterialFromXML( osgDB::XmlNode* xmlNode,
             if ( xmlChild->children.size()>0 )
             {
                 osg::Uniform* uniform = createUniformFromXML( xmlChild, false );
-                stateset->addUniform( uniform );
+                material->addUniform( uniform );
             }
             else
             {
                 osg::Uniform* uniform = getUniform( xmlChild->getTrimmedContents() );
-                if ( uniform ) stateset->addUniform( uniform );
+                if ( uniform ) material->addUniform( uniform );
                 else OSG_NOTICE << "EffectCompositor: <material> can't find global uniform object " << xmlChild->getTrimmedContents() << std::endl;
             }
         }
     }
+
+    if ( asGlobal )
+    {
+        if ( !setMaterial(name, material.get()) )
+            OSG_NOTICE << "EffectCompositor: <material> object name " << name << " already exists" << std::endl;
+        return material.get();
+    }
+    else
+        return material.release();
 }
 
 bool EffectCompositor::loadFromXML( osgDB::XmlNode* xmlNode, XmlTemplateMap& templateMap, const osgDB::Options* options )
@@ -1008,6 +1017,8 @@ bool EffectCompositor::loadFromXML( osgDB::XmlNode* xmlNode, XmlTemplateMap& tem
             createUniformFromXML( xmlChild, true );
         else if ( childName=="shader" )
             createShaderFromXML( xmlChild, true );
+        else if ( childName=="material" )
+            createMaterialFromXML( xmlChild, true );
         else
             OSG_NOTICE << "EffectCompositor: doesn't recognize global element " << childName << std::endl;
     }
