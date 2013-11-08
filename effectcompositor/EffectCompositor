@@ -177,6 +177,19 @@ public:
     typedef std::map<std::string, osg::ref_ptr<osg::Shader> > ShaderMap;
     const ShaderMap& getShaderMap() const { return _shaderMap; }
     
+    /** Set a global Material object */
+    bool setMaterial( const std::string& name, osg::StateSet* stateSet );
+    
+    /** Remove a global Material object */
+    bool removeMaterial( const std::string& name );
+    
+    /** Get a global Material object */
+    osg::StateSet* getMaterial( const std::string& name );
+    const osg::StateSet* getMaterial( const std::string& name ) const;
+    
+    typedef std::map<std::string, osg::ref_ptr<osg::StateSet> > MaterialMap;
+    const MaterialMap& getMaterialMap() const { return _materialMap; }
+    
     /** Get or create the quad for rendering deferred data */
     osg::Geode* getOrCreateQuad();
     
@@ -233,6 +246,15 @@ public:
     */
     osg::Shader* createShaderFromXML( osgDB::XmlNode* xmlNode, bool asGlobal );
     
+    /** Create a global/local Material object from XML
+        A typical definition is:
+          <material name="...">
+            <uniform>...</uniform>
+            <texture unit="">...</texture>
+          </material>
+    */
+    osg::StateSet* createMaterialFromXML( osgDB::XmlNode* xmlNode, bool asGlobal );
+    
     typedef std::map<std::string, osg::ref_ptr<osgDB::XmlNode> > XmlTemplateMap;
     
     /** Load effect data from XML, can be executed multiple times to load various data */
@@ -258,6 +280,7 @@ protected:
     TextureMap _textureMap;
     UniformMap _uniformMap;
     ShaderMap _shaderMap;
+    MaterialMap _materialMap;
     InbuiltUniformList _inbuiltUniforms;
     std::string _currentTechnique;
     
