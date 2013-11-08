@@ -388,6 +388,44 @@ const osg::Shader* EffectCompositor::getShader( const std::string& name ) const
     else return itr->second.get();
 }
 
+bool EffectCompositor::setMaterial( const std::string& name, osg::StateSet* material )
+{
+    MaterialMap::iterator itr = _materialMap.find(name);
+    if ( itr!=_materialMap.end() )
+    {
+        itr->second = material;
+        return false;
+    }
+    else
+    {
+        _materialMap[name] = material;
+        return true;
+    }
+}
+
+bool EffectCompositor::removeMaterial( const std::string& name )
+{
+    MaterialMap::iterator itr = _materialMap.find(name);
+    if ( itr==_materialMap.end() ) return false;
+    
+    _materialMap.erase( itr );
+    return true;
+}
+
+osg::StateSet* EffectCompositor::getMaterial( const std::string& name )
+{
+    MaterialMap::const_iterator itr = _materialMap.find(name);
+    if ( itr==_materialMap.end() ) return NULL;
+    else return itr->second.get();
+}
+
+const osg::StateSet* EffectCompositor::getMaterial( const std::string& name ) const
+{
+    MaterialMap::const_iterator itr = _materialMap.find(name);
+    if ( itr==_materialMap.end() ) return NULL;
+    else return itr->second.get();
+}
+
 osg::Geode* EffectCompositor::getOrCreateQuad()
 {
     if ( !_quad )

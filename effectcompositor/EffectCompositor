@@ -178,7 +178,7 @@ public:
     const ShaderMap& getShaderMap() const { return _shaderMap; }
     
     /** Set a global Material object */
-    bool setMaterial( const std::string& name, osg::StateSet* stateSet );
+    bool setMaterial( const std::string& name, osg::StateSet* material );
     
     /** Remove a global Material object */
     bool removeMaterial( const std::string& name );
