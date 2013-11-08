@@ -881,7 +881,7 @@ osg::Shader* EffectCompositor::createShaderFromXML( osgDB::XmlNode* xmlNode, boo
 
 osg::StateSet* EffectCompositor::createMaterialFromXML( osgDB::XmlNode* xmlNode, bool asGlobal )
 {
-    osg::ref_ptr<osg::StateSet> material;
+    osg::ref_ptr<osg::StateSet> material = new osg::StateSet;
     std::string name = xmlNode->properties["name"];
     if ( name.empty() )
         OSG_NOTICE << "EffectCompositor: inappropriate to create material with empty name" << std::endl;
