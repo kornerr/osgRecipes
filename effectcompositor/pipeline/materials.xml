@@ -1,8 +1,8 @@
 <compositor>
     <texture name="bumpTexture" template="textureTemplate">
-        <file>bump_tex.png</file>
+        <file>bump_tex.jpg</file>
     </texture>
-    <material name="bumpyNoise">
+    <material name="bumpySurface">
         <texture unit="1" varname="bumpMap">bumpTexture</texture>
         <uniform name="useBumpMap" type="int">
             <value>1</value>

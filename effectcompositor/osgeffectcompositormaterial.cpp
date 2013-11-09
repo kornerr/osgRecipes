@@ -69,15 +69,15 @@ int main( int argc, char** argv )
     // Create the scene
     osg::Node* model = osgDB::readNodeFiles( arguments );
     if ( !model ) model = osgDB::readNodeFile( "box.osgt" );
-    osg::Vec3 lightPos(-1, -4, 4);
+    osg::Vec3 lightPos(0, -3, 1);
     osg::LightSource* light = new osg::LightSource;
     light->getLight()->setPosition(osg::Vec4(lightPos.x(), lightPos.y(), lightPos.z(), 1));
     osg::MatrixTransform* box1 = new osg::MatrixTransform;
     box1->addChild(model);
-    box1->setMatrix(osg::Matrix::translate(-3, 0, 0));
+    box1->setMatrix(osg::Matrix::translate(-1.5, 0, 0));
     osg::MatrixTransform* box2 = new osg::MatrixTransform;
     box2->addChild(model);
-    box2->setMatrix(osg::Matrix::translate(3, 0, 0));
+    box2->setMatrix(osg::Matrix::translate(1.5, 0, 0));
     
     osg::ref_ptr<osg::Group> scene = new osg::Group;
     scene->addChild( light );
@@ -95,6 +95,8 @@ int main( int argc, char** argv )
     osgFX::EffectCompositor::PassData pass2;
     compositor->getPassData("pass2", pass2);
     pass2.pass->getOrCreateStateSet()->addUniform(new osg::Uniform("lightPos", lightPos));
+    // Box2 material.
+    box1->setStateSet(compositor->getMaterial("bumpySurface"));
     // For the fastest and simplest effect use, this is enough!
     compositor->addChild( scene.get() );
     int textureSize = compositor->getTexture("pass2Final")->getTextureWidth();

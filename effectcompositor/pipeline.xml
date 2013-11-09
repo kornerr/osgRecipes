@@ -25,10 +25,8 @@
         <forward_pass name="pass1">
             <clear_color>0 0 0 1</clear_color>
             <texture unit="0" varname="diffMap">noise</texture>
-            <!--<texture unit="1" varname="bumpMap">rockwallBump</texture>-->
             <shader>pass1VS</shader>
             <shader>pass1FS</shader>
-            <!--<uniform>useBumpMap</uniform>-->
             <uniform name="useBumpMap" type="int">
                 <value>0</value>
             </uniform>
