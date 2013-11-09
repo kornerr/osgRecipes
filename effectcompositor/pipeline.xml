@@ -24,12 +24,20 @@
     <technique>
         <forward_pass name="pass1">
             <clear_color>0 0 0 1</clear_color>
-            <texture unit="0" varname="diffMap">noise</texture>
             <shader>pass1VS</shader>
             <shader>pass1FS</shader>
+            <!-- defaults begin -->
+            <texture unit="0" varname="diffMap">noise</texture>
             <uniform name="useBumpMap" type="int">
                 <value>0</value>
             </uniform>
+            <uniform name="crawlDiffMap" type="int">
+                <value>0</value>
+            </uniform>
+            <uniform name="crawlBumpMap" type="int">
+                <value>0</value>
+            </uniform>
+            <!-- defaults end -->
             <output_buffer target="color0">pass1Positions</output_buffer>
             <output_buffer target="color1">pass1Normals</output_buffer>
             <output_buffer target="color2">pass1Colors</output_buffer>

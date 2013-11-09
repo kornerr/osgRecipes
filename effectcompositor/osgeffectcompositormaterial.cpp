@@ -69,20 +69,28 @@ int main( int argc, char** argv )
     // Create the scene
     osg::Node* model = osgDB::readNodeFiles( arguments );
     if ( !model ) model = osgDB::readNodeFile( "box.osgt" );
-    osg::Vec3 lightPos(0, -3, 1);
+    osg::Vec3 lightPos(0, -3, 0);
     osg::LightSource* light = new osg::LightSource;
     light->getLight()->setPosition(osg::Vec4(lightPos.x(), lightPos.y(), lightPos.z(), 1));
     osg::MatrixTransform* box1 = new osg::MatrixTransform;
     box1->addChild(model);
-    box1->setMatrix(osg::Matrix::translate(-1.5, 0, 0));
+    box1->setMatrix(osg::Matrix::translate(-1.5, 0, 1.5));
     osg::MatrixTransform* box2 = new osg::MatrixTransform;
     box2->addChild(model);
-    box2->setMatrix(osg::Matrix::translate(1.5, 0, 0));
+    box2->setMatrix(osg::Matrix::translate(1.5, 0, 1.5));
+    osg::MatrixTransform* box3 = new osg::MatrixTransform;
+    box3->addChild(model);
+    box3->setMatrix(osg::Matrix::translate(-1.5, 0, -1.5));
+    osg::MatrixTransform* box4 = new osg::MatrixTransform;
+    box4->addChild(model);
+    box4->setMatrix(osg::Matrix::translate(1.5, 0, -1.5));
     
     osg::ref_ptr<osg::Group> scene = new osg::Group;
     scene->addChild( light );
     scene->addChild( box1 );
     scene->addChild( box2 );
+    scene->addChild( box3 );
+    scene->addChild( box4 );
     
     // Create the effect compositor from XML file
     osgFX::EffectCompositor* compositor = osgFX::readEffectFile( effectFile );
@@ -95,8 +103,10 @@ int main( int argc, char** argv )
     osgFX::EffectCompositor::PassData pass2;
     compositor->getPassData("pass2", pass2);
     pass2.pass->getOrCreateStateSet()->addUniform(new osg::Uniform("lightPos", lightPos));
-    // Box2 material.
+    // Materials for boxes.
     box1->setStateSet(compositor->getMaterial("bumpySurface"));
+    box3->setStateSet(compositor->getMaterial("crawlingBumpySurface"));
+    box4->setStateSet(compositor->getMaterial("crawlingPlainSurface"));
     // For the fastest and simplest effect use, this is enough!
     compositor->addChild( scene.get() );
     int textureSize = compositor->getTexture("pass2Final")->getTextureWidth();
