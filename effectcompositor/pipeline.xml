@@ -1,0 +1,48 @@
+<compositor>
+    <include>pipeline/templates.xml</include>
+    <include>pipeline/materials.xml</include>
+    <shader name="pass1VS" type="vertex">
+        <file>pipeline/pass1.vert</file>
+    </shader>
+    <shader name="pass1FS" type="fragment">
+        <file>pipeline/pass1.frag</file>
+    </shader>
+    <shader name="pass2VS" type="vertex">
+        <file>pipeline/pass2.vert</file>
+    </shader>
+    <shader name="pass2FS" type="fragment">
+        <file>pipeline/pass2.frag</file>
+    </shader>
+    <buffer name="pass1Positions" template="bufferTemplate" />
+    <buffer name="pass1Normals"   template="bufferTemplate" />
+    <buffer name="pass1Colors"    template="bufferTemplate" />
+    <buffer name="pass2Final"     template="bufferTemplate" />
+    <texture name="noise" template="textureTemplate">
+        <file>noise_tex.jpg</file>
+    </texture>
+    
+    <technique>
+        <forward_pass name="pass1">
+            <clear_color>0 0 0 1</clear_color>
+            <texture unit="0" varname="diffMap">noise</texture>
+            <!--<texture unit="1" varname="bumpMap">rockwallBump</texture>-->
+            <shader>pass1VS</shader>
+            <shader>pass1FS</shader>
+            <!--<uniform>useBumpMap</uniform>-->
+            <uniform name="useBumpMap" type="int">
+                <value>0</value>
+            </uniform>
+            <output_buffer target="color0">pass1Positions</output_buffer>
+            <output_buffer target="color1">pass1Normals</output_buffer>
+            <output_buffer target="color2">pass1Colors</output_buffer>
+        </forward_pass>
+        <deferred_pass name="pass2">
+            <input_buffer unit="0" varname="posMap">pass1Positions</input_buffer>
+            <input_buffer unit="1" varname="normalMap">pass1Normals</input_buffer>
+            <input_buffer unit="2" varname="colorMap">pass1Colors</input_buffer>
+            <shader>pass2VS</shader>
+            <shader>pass2FS</shader>
+            <output_buffer target="color">pass2Final</output_buffer>
+        </deferred_pass>
+    </technique>
+</compositor>

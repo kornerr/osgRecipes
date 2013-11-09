@@ -85,6 +85,15 @@ ELSE(SILVERLINING_INCLUDE_DIR AND SILVERLINING_LIBRARY)
     
 ENDIF(SILVERLINING_INCLUDE_DIR AND SILVERLINING_LIBRARY)
 
+# Second example.
+SET(EXAMPLE_NAME osgeffectcompositormaterial)
+SET(EXAMPLE_FILES
+    osgeffectcompositormaterial.cpp
+    EffectCompositor.cpp
+    EffectCompositorXML.cpp
+)
+START_EXAMPLE()
+
 # osgFXEffectCompositor library.
 ADD_LIBRARY(osgFXEffectCompositor SHARED EffectCompositor.cpp
                                          EffectCompositorXML.cpp)
